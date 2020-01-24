@@ -10,154 +10,128 @@ import { connect } from 'react-redux';
 import * as actions from '../redux/actions';
 
 class Screen extends PureComponent {
+  constructor(props) {
+    super(props);
+  }
 
-    
-    constructor(props) {
-        super(props);
+  onPressButton = char => {
+    switch (typeof char) {
+      //number -> add input
+      case 'number':
+        this.props.onHandleInput({
+          previousInput: char,
+          textInput: this.props.calculatorReducer.textInput + `${char}`,
+        });
+        break;
+      default:
+        //not allow click operation double time
+        if (this.props.calculatorReducer.previousInput === char) return;
 
-        this.state = {
-            textInput: "",
-            previousInput: "",
-            isShowResult: false
+        this.handleOperator(char);
+        break;
+    }
+  };
+
+  handleOperator(char) {
+    let { previousInput, textInput } = this.props.calculatorReducer;
+
+    switch (char) {
+      case '+':
+      case '-':
+      case '*':
+      case '/':
+        //before that is expressions -> replace expressions
+        if (
+          previousInput === '+' ||
+          previousInput === '-' ||
+          previousInput === '*' ||
+          previousInput === '/'
+        )
+          textInput = textInput.substring(0, textInput.length - 1);
+        this.props.onHandleInput({
+          previousInput: char,
+          textInput: textInput + `${char}`,
+        });
+        break;
+      case 'C':
+        this.props.onHandleInput({
+          previousInput: char,
+          textInput: '',
+        });
+        break;
+      case '.':
+        //if before not a expressions => add 0.
+        if (
+          previousInput === '+' ||
+          previousInput === '-' ||
+          previousInput === '*' ||
+          previousInput === '/'
+        ) {
+          textInput = textInput + `0${char}`;
+        } else {
+          textInput = textInput + `${char}`;
         }
-
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        
-    }
-
-    onPressButton = (char) => {
-        switch(typeof char) {
-            //number -> add input
-            case 'number':
-                this.setState({
-                    previousInput: char,
-                    textInput: this.state.textInput + `${char}`,
-                    isShowResult: false
-                });
-                break;
-            default:
-                //not allow click operation double time
-                if(this.state.previousInput===char) return;
-
-                this.handleOperator(char);
-                break;
+        this.props.onHandleInput({
+          previousInput: char,
+          textInput: textInput,
+        });
+        break;
+      case '=':
+        try {
+          let result = eval(textInput);
+          this.props.onHandleInput({
+            previousInput: char,
+            textInput: result,
+          });
+        } catch (ex) {
+          alert('Some thing went wrong');
         }
+        break;
     }
+  }
 
-    handleOperator(char) {
-
-        let { previousInput, textInput } = this.state;
-
-        switch(char) {
-            case "+":
-            case "-":
-            case "*":
-            case "/":
-                //before that is expressions -> replace expressions
-                if(previousInput=="+" || previousInput=="-" || previousInput=="*" || previousInput=="/") {
-                    previousInput.substring(0, previousInput.length - 1);
-                }
-
-                this.setState({
-                    previousInput: char,
-                    textInput: textInput + `${char}`,
-                    isShowResult: false
-                });
-                break;
-            case "C":
-                this.setState({
-                    previousInput: char,
-                    textInput: "",
-                    isShowResult: false
-                });
-                break;
-            case ".":
-                //need fix
-
-                //if before not a number => add 0.
-                if(typeof(previousInput)==="number") {
-                    textInput = textInput + `${char}`;
-                } else {
-                    textInput = textInput + `0${char}`;
-                }
-                this.setState({
-                    previousInput: char,
-                    textInput: textInput,
-                    isShowResult: false
-                });
-                break;
-            case "=":
-                let fixedOperation = textInput.split(',').join('.')
-                let result = eval(fixedOperation);
-                this.props.onUpdateResult(result);
-                this.setState({
-                    previousInput: char,
-                    textInput: "",
-                    isShowResult: true
-                });
-                break;
-        }
-    }
-
-    render() {
-
-        const { textInput, isShowResult } = this.state;
-        const { result } = this.props.calculatorReducer;
-
-        return (
-            <SafeAreaView style={ styles.container }>
-                <View style={ styles.content }>
-                    <View style={ styles.display }>
-                        {
-                            isShowResult ? 
-                                <Text style={ styles.textDisplay }>{`${result}`}</Text>
-                            :
-                                <Text style={ styles.textDisplay }>{`${textInput}`}</Text>
-                        }
-                    </View>
-                    <View style={ styles.button }>
-                        <View style={ styles.wrapNumber }>
-                            {
-                                Constants.numbers.map((item, index) =>
-                                    <View key={index} style={ styles.row }>
-                                        {
-                                            item.map(char =>
-                                                <Button key={char} char={char} onPressBtn={this.onPressButton} />    
-                                            )
-                                        }
-                                    </View>
-                                )
-                            }
-                        </View>
-                        <View style={ styles.wrapOpration }>
-                            {
-                                Constants.operations.map(char =>
-                                    <Button key={char} char={char} onPressBtn={this.onPressButton} /> 
-                                )
-                            }
-                        </View>
-                    </View>
+  render() {
+    const { textInput } = this.props.calculatorReducer;
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.content}>
+          <View style={styles.display}>
+            <Text style={styles.textDisplay}>{`${textInput}`}</Text>
+          </View>
+          <View style={styles.button}>
+            <View style={styles.wrapNumber}>
+              {Constants.numbers.map((item, index) => (
+                <View key={index} style={styles.row}>
+                  {item.map(char => (
+                    <Button key={char} char={char} onPressBtn={this.onPressButton} />
+                  ))}
                 </View>
-            </SafeAreaView>
-        );
-    }
-
+              ))}
+            </View>
+            <View style={styles.wrapOpration}>
+              {Constants.operations.map(char => (
+                <Button key={char} char={char} onPressBtn={this.onPressButton} />
+              ))}
+            </View>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        calculatorReducer: state.calculatorReducer
-    }
+const mapStateToProps = state => {
+  return {
+    calculatorReducer: state.calculatorReducer,
+  };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        onUpdateResult: (params) => {
-            dispatch(actions.updateResult(params));
-        }
-    }
+const mapDispatchToProps = dispatch => {
+  return {
+    onHandleInput: params => {
+      dispatch(actions.handleInput(params));
+    },
+  };
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(Screen);;
+export default connect(mapStateToProps, mapDispatchToProps)(Screen);

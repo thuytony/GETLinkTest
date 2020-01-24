@@ -1,13 +1,8 @@
 {
   "extends": ["prettier", "prettier/react"],
   "rules": {
-    "eslint max-len": ["error", { "code": 80, "tabWidth": 4 }],
-    "react/jsx-filename-extension": [
-      1,
-      {
-        "extensions": [".js", ".jsx"]
-      }
-    ],
+    "max-len": ["error", { "code": 100, "tabWidth": 2 }],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "prettier/prettier": [
       "error",
       {
@@ -17,5 +12,6 @@
       }
     ]
   },
-  "plugins": ["prettier"]
+  "plugins": ["prettier"],
+  "parser": "babel-eslint"
 }

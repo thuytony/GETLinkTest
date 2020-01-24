@@ -1,14 +1,9 @@
-const ACTION_UPDATE_RESULT = '[CALCULATOR] ACTION_UPDATE_RESULT'
-const updateResult = (payload) => {
-    return {
-        type: ACTION_UPDATE_RESULT,
-        payload,
-    }
-}
+const ACTION_HANDLE_INPUT = '[CALCULATOR] ACTION_HANDLE_INPUT';
+const handleInput = payload => {
+  return {
+    type: ACTION_HANDLE_INPUT,
+    payload,
+  };
+};
 
-export {
-
-    ACTION_UPDATE_RESULT,
-    updateResult
-
-}
+export { ACTION_HANDLE_INPUT, handleInput };
