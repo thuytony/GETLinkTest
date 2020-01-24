@@ -8,28 +8,28 @@ export const styles = StyleSheet.create({
         flex: 1
     },
     display: {
-        flex: 2,
-        backgroundColor: 'red',
+        flex: 1,
         alignItems: 'flex-end',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+        padding: 16
     },
     button: {
-        flex: 3,
+        flex: 1,
         flexDirection: 'row',
-        backgroundColor: 'green',
-        padding: 4
+        paddingHorizontal: 8,
+        paddingBottom: 8
     },
     textDisplay: {
-        fontSize: 18,
-        color: 'black'
+        fontSize: 60,
+        color: 'black',
+        margin: 0,
+        padding: 0
     },
     wrapNumber: {
-        flex: 3,
-        backgroundColor: 'blue'
+        flex: 3
     },
     wrapOpration: {
-        flex: 1,
-        backgroundColor: 'white'
+        flex: 1
     },
     row: {
         flex: 1,
@@ -41,13 +41,12 @@ export const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 4,
+        margin: 6,
         borderRadius: 8,
-        backgroundColor: 'red'
+        backgroundColor: '#DDDDDD'
     },
     textButton: {
         color: 'black',
-        fontSize: 32,
-        fontWeight: 'bold'
+        fontSize: 24
     }
 });

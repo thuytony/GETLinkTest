@@ -45,7 +45,7 @@ const Button = React.memo(function Button(props) {
             onPress = { () => props.onPressBtn(props.char) }
         >
             
-            <Text>{props.char}</Text>
+            <Text style={ styles.textButton }>{props.char}</Text>
         </TouchableHighlight>
     );
 });

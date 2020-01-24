@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, SafeAreaView } from 'react-native';
 import { styles } from './styles';
 
 import Button from './Button';
@@ -28,12 +28,8 @@ class Screen extends PureComponent {
     }
 
     onPressButton = (char) => {
-        console.log("onPress:", char);
-        console.log("all input:", this.state.textInput);
-        console.log("previous input:", this.state.previousInput);
-        console.log("result:", this.props.calculatorReducer.result);
-        console.log("test:", typeof char, this.state.textInput + `${char}`)
         switch(typeof char) {
+            //number -> add input
             case 'number':
                 this.setState({
                     previousInput: char,
@@ -59,10 +55,11 @@ class Screen extends PureComponent {
             case "-":
             case "*":
             case "/":
-                //need fix
+                //before that is expressions -> replace expressions
                 if(previousInput=="+" || previousInput=="-" || previousInput=="*" || previousInput=="/") {
                     previousInput.substring(0, previousInput.length - 1);
                 }
+
                 this.setState({
                     previousInput: char,
                     textInput: textInput + `${char}`,
@@ -110,14 +107,14 @@ class Screen extends PureComponent {
         const { result } = this.props.calculatorReducer;
 
         return (
-            <View style={ styles.container }>
+            <SafeAreaView style={ styles.container }>
                 <View style={ styles.content }>
                     <View style={ styles.display }>
                         {
                             isShowResult ? 
-                                <Text style={ styles.wrapDisplay }>{`${result}`}</Text>
+                                <Text style={ styles.textDisplay }>{`${result}`}</Text>
                             :
-                                <Text style={ styles.wrapDisplay }>{`${textInput}`}</Text>
+                                <Text style={ styles.textDisplay }>{`${textInput}`}</Text>
                         }
                     </View>
                     <View style={ styles.button }>
@@ -143,7 +140,7 @@ class Screen extends PureComponent {
                         </View>
                     </View>
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 
